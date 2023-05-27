@@ -1,16 +1,17 @@
 {
-  "name": "chrome-extension-boilerplate-react",
+  "name": "eventifywiz-chrome-extension-text-to-calendar",
   "version": "5.0.4",
-  "description": "A chrome extension boilerplate built with React 18, Webpack 5, and Webpack Dev Server 4",
+  "description": "A chrome extension for creating new google events directly from the web page using chatGPT.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lxieyang/chrome-extension-boilerplate-react.git"
+    "url": "https://github.com/lxieyang/eventifywiz-chrome-extension-text-to-calendar.git"
   },
   "scripts": {
     "build": "node utils/build.js",
     "start": "node utils/webserver.js",
-    "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
+    "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -57,5 +58,14 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1",
     "zip-webpack-plugin": "^4.0.1"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{css,scss,md,html,json}": [
+      "prettier --write"
+    ]
   }
 }

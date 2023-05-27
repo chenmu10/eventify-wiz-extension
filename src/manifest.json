@@ -2,8 +2,6 @@
   "manifest_version": 3,
   "name": "EventifyWiz - Text to Event",
   "description": "A chrome extension to create new google calendar events from any text",
-  "options_page": "options.html",
-  "background": { "service_worker": "background.bundle.js" },
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon-34.png"

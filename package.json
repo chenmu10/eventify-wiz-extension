@@ -1,11 +1,11 @@
 {
-  "name": "eventifywiz-chrome-extension-text-to-calendar",
-  "version": "5.0.4",
+  "name": "eventify-wiz-chrome-extension-text-to-calendar",
+  "version": "0.0.1",
   "description": "A chrome extension for creating new google events directly from the web page using chatGPT.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lxieyang/eventifywiz-chrome-extension-text-to-calendar.git"
+    "url": "https://github.com/chenmu10/eventify-wiz-extension.git"
   },
   "scripts": {
     "build": "node utils/build.js",

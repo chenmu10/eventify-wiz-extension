@@ -57,3 +57,7 @@ input:focus {
   outline: none;
   box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
 }
+
+p {
+  word-wrap: break-word;
+}

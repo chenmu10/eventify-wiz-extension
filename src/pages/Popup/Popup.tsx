@@ -1,16 +1,43 @@
 import React, { useRef, useState } from 'react'
+import { getEventDetails } from '../../services/chatgpt'
 import './Popup.css'
 
 const Popup = () => {
   const textAreaRef = useRef(null)
+  const [chatgptErrorMsg, setChatgptErrorMsg] = useState('')
   const [formData, setFormData] = useState({
     eventName: '',
     location: '',
+    description: '',
     startDate: new Date().toISOString().substring(0, 10),
     endDate: new Date().toISOString().substring(0, 10),
     startTime: '',
     endTime: '',
   })
+
+  const handleExtractClick = async () => {
+    try {
+      const data = await getEventDetails(textAreaRef.current?.value)
+      if (data?.isError) {
+        setChatgptErrorMsg(JSON.stringify(data.content, null, 2))
+      } else {
+        const { summary, location, description, start, end } = data.content
+        const [startDate, startTime] = start.dateTime.split('T')
+        const [endDate, endTime] = end.dateTime.split('T')
+        setFormData({
+          eventName: summary,
+          location: location,
+          description: description,
+          startDate: startDate,
+          endDate: endDate,
+          startTime: startTime,
+          endTime: endTime,
+        })
+      }
+    } catch (error) {
+      console.log('Error:', error)
+    }
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -19,7 +46,8 @@ const Popup = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    alert(`Name: ${formData.eventName}, Email: ${formData.location}, Message: ${formData.startDate}`)
+    const { eventName, location, startDate } = formData
+    alert(`Name: ${eventName}, Location: ${location}, Start Date: ${startDate}`)
   }
 
   return (
@@ -32,7 +60,8 @@ const Popup = () => {
           ref={textAreaRef}
           placeholder='Enter any text with event details.'
         ></textarea>
-        <button>Extract ✨</button>
+        <button onClick={handleExtractClick}>Extract ✨</button>
+        <p>{chatgptErrorMsg}</p>
       </div>
       <form onSubmit={handleSubmit}>
         <label htmlFor='eventName'>Event Name</label>
@@ -47,6 +76,9 @@ const Popup = () => {
 
         <label htmlFor='location'>Location</label>
         <input type='text' id='location' name='location' value={formData.location} onChange={handleChange} required />
+
+        <label htmlFor='description'>Description</label>
+        <textarea id='description' name='description' value={formData.description} onChange={handleChange}></textarea>
 
         <label htmlFor='startDate'>Start Date</label>
         <input

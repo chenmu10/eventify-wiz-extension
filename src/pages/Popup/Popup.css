@@ -35,6 +35,16 @@ button:hover {
   transition-duration: 0.1s;
 }
 
+button:disabled {
+  opacity: 50%;
+  cursor: default;
+}
+
+button:disabled:hover {
+  background-color: #fafbfc;
+  color: #0366d6;
+}
+
 input,
 textarea {
   margin: 5px 0;
@@ -60,4 +70,9 @@ input:focus {
 
 p {
   word-wrap: break-word;
+}
+
+.error {
+  font-weight: 700;
+  color: red;
 }

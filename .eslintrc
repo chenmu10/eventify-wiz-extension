@@ -1,6 +1,9 @@
 {
-  "extends": "react-app",
+  "extends": ["react-app", "prettier"],
   "globals": {
     "chrome": "readonly"
+  },
+  "rules": {
+    "semi": "warn"
   }
 }

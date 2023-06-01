@@ -1,14 +1,14 @@
-import React, { FC, useState } from 'react'
-import { EventDetails } from '../types'
-import { extractEventDetails } from './../services/chatgpt'
+import React, { FC, useState } from 'react';
+import { EventDetails } from '../types';
+import { extractEventDetails } from './../services/chatgpt';
 interface ExtractFormProps {
-  onExtractedData: (eventDetails: EventDetails) => void
+  onExtractedData: (eventDetails: EventDetails) => void;
 }
 
 const ExtractForm: FC<ExtractFormProps> = ({ onExtractedData }) => {
-  const [promptData, setPromptData] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [status, setStatus] = useState<'typing' | 'loading' | 'success'>('typing')
+  const [promptData, setPromptData] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<'typing' | 'loading' | 'success'>('typing');
   let [eventDetails, setEventDetails] = useState({
     summary: 'lunch with Tina',
     location: 'Tel Aviv',
@@ -21,27 +21,27 @@ const ExtractForm: FC<ExtractFormProps> = ({ onExtractedData }) => {
       timeZone: 'Asia/Jerusalem',
     },
     description: 'we should discuss the project.',
-  })
+  });
   function handleTextareaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setPromptData(e.target.value)
+    setPromptData(e.target.value);
   }
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
-    e.preventDefault()
-    setStatus('loading')
+    e.preventDefault();
+    setStatus('loading');
     try {
-      const data = await extractEventDetails(promptData)
+      const data = await extractEventDetails(promptData);
       if (data.content) {
-        setEventDetails(data)
-        setStatus('success')
+        setEventDetails(data);
+        setStatus('success');
       } else {
-        setError(JSON.stringify(data, null, 2))
-        setStatus('typing')
+        setError(JSON.stringify(data, null, 2));
+        setStatus('typing');
       }
     } catch (err: any) {
-      setStatus('typing')
-      setError(err.toString())
+      setStatus('typing');
+      setError(err.toString());
     } finally {
-      onExtractedData(eventDetails)
+      onExtractedData(eventDetails);
     }
   }
 
@@ -58,7 +58,7 @@ const ExtractForm: FC<ExtractFormProps> = ({ onExtractedData }) => {
       </button>
       {error && <p className='error'>{error}</p>}
     </form>
-  )
-}
+  );
+};
 
-export default ExtractForm
+export default ExtractForm;

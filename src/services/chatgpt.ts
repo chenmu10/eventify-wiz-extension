@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.openai.com/v1'
+const BASE_URL = 'https://api.openai.com/v1';
 
 export async function extractEventDetails(eventData: string): Promise<any> {
   const response = await fetch(`${BASE_URL}/completions`, {
@@ -18,6 +18,6 @@ export async function extractEventDetails(eventData: string): Promise<any> {
       presence_penalty: 0.0,
       stop: ['\n'],
     }),
-  })
-  return response.json()
+  });
+  return response.json();
 }

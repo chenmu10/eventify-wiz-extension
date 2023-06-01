@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FC, FormEvent } from 'react'
-import { FormData } from '../types'
+import React, { ChangeEvent, FC, FormEvent } from 'react';
+import { FormData } from '../types';
 interface EventDetailsFormProps {
-  formData: FormData
-  onHandleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void
+  formData: FormData;
+  onHandleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 const EventDetailsForm: FC<EventDetailsFormProps> = ({ formData, onHandleChange, onHandleSubmit }) => {
@@ -39,7 +39,7 @@ const EventDetailsForm: FC<EventDetailsFormProps> = ({ formData, onHandleChange,
 
       <button type='submit'>Create Google Calendar Event 🪄</button>
     </form>
-  )
-}
+  );
+};
 
-export default EventDetailsForm
+export default EventDetailsForm;

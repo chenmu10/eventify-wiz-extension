@@ -1,25 +1,12 @@
 import React, { useState } from 'react'
 import EventDetailsForm from '../../components/EventDetailsForm'
 import ExtractForm from '../../components/ExtractForm'
+import { EventDetails } from './../../types'
 import './Popup.css'
-
-type Meeting = {
-  summary: string
-  location: string
-  start: {
-    dateTime: string
-    timeZone: string
-  }
-  end: {
-    dateTime: string
-    timeZone: string
-  }
-  description: string
-}
 
 const Popup = () => {
   const [formData, setFormData] = useState({
-    eventName: '',
+    summary: '',
     location: '',
     description: '',
     startDate: new Date().toISOString().substring(0, 10),
@@ -28,20 +15,20 @@ const Popup = () => {
     endTime: '',
   })
 
-  const handleChange = (event) => {
-    const { name, value } = event.target
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     alert(JSON.stringify(formData))
   }
 
-  const handleExtractedData = (data?: Meeting) => {
+  const handleExtractedData = (data?: EventDetails) => {
     if (!data) {
       return
     }
@@ -50,20 +37,20 @@ const Popup = () => {
     const [endDate, endTime] = end.dateTime.split('T')
     setFormData((prevFormData) => ({
       ...prevFormData,
-      eventName: summary,
-      location: location,
-      description: description,
-      startDate: startDate,
-      endDate: endDate,
-      startTime: startTime,
-      endTime: endTime,
+      summary,
+      location,
+      description,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
     }))
   }
 
   return (
     <div className='App'>
       <ExtractForm onExtractedData={handleExtractedData} />
-      <EventDetailsForm eventDetails={formData} onHandleChange={handleChange} onHandleSubmit={handleSubmit} />
+      <EventDetailsForm formData={formData} onHandleChange={handleChange} onHandleSubmit={handleSubmit} />
     </div>
   )
 }

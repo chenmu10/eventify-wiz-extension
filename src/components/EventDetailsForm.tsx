@@ -1,51 +1,41 @@
-import React, { FC } from 'react'
-
+import React, { ChangeEvent, FC, FormEvent } from 'react'
+import { FormData } from '../types'
 interface EventDetailsFormProps {
-  eventDetails: Meeting
-  onHandleChange: any
-  onHandleSubmit: any
+  formData: FormData
+  onHandleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void
 }
 
-const EventDetailsForm: FC<EventDetailsFormProps> = ({ eventDetails, onHandleChange, onHandleSubmit }) => {
+const EventDetailsForm: FC<EventDetailsFormProps> = ({ formData, onHandleChange, onHandleSubmit }) => {
   return (
     <form onSubmit={onHandleSubmit}>
       <label htmlFor='eventName'>Event Name</label>
-      <input
-        type='text'
-        id='eventName'
-        name='eventName'
-        value={eventDetails.eventName}
-        onChange={onHandleChange}
-        required
-      />
+      <input type='text' id='eventName' name='eventName' value={formData.summary} onChange={onHandleChange} required />
 
       <label htmlFor='location'>Location</label>
-      <input type='text' id='location' name='location' value={eventDetails.location} onChange={onHandleChange} />
+      <input type='text' id='location' name='location' value={formData.location} onChange={onHandleChange} />
 
       <label htmlFor='description'>Description</label>
-      <textarea
-        id='description'
-        name='description'
-        value={eventDetails.description}
-        onChange={onHandleChange}
-      ></textarea>
+      <textarea id='description' name='description' value={formData.description} onChange={onHandleChange}></textarea>
 
       <label htmlFor='startDate'>Start Date</label>
       <input
         type='date'
         id='startDate'
         name='startDate'
-        value={eventDetails.startDate}
+        value={formData.startDate}
         onChange={onHandleChange}
         required
       />
-      <label htmlFor='startTime'></label>
-      <input type='time' id='startTime' name='startTime' value={eventDetails.startTime} onChange={onHandleChange} />
+
+      <label htmlFor='startTime'>Start Time</label>
+      <input type='time' id='startTime' name='startTime' value={formData.startTime} onChange={onHandleChange} />
 
       <label htmlFor='endDate'>End Date</label>
-      <input type='date' id='endDate' name='endDate' value={eventDetails.endDate} onChange={onHandleChange} required />
-      <label htmlFor='endTime'></label>
-      <input type='time' id='endTime' name='endTime' value={eventDetails.endTime} onChange={onHandleChange} />
+      <input type='date' id='endDate' name='endDate' value={formData.endDate} onChange={onHandleChange} required />
+
+      <label htmlFor='endTime'>End Time</label>
+      <input type='time' id='endTime' name='endTime' value={formData.endTime} onChange={onHandleChange} />
 
       <button type='submit'>Create Google Calendar Event 🪄</button>
     </form>

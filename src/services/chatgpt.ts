@@ -1,5 +1,5 @@
+import { OPENAI_API_KEY } from '../env'
 const BASE_URL = 'https://api.openai.com/v1'
-const OPENAI_API_KEY = '1111'
 
 export async function extractEventDetails(eventData: string): Promise<any> {
   try {

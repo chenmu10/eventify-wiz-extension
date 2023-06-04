@@ -33,9 +33,6 @@ const ExtractForm: FC<ExtractFormProps> = ({ onExtractedData }) => {
       if (data.content) {
         setEventDetails(data);
         setStatus('success');
-      } else {
-        setError(JSON.stringify(data, null, 2));
-        setStatus('typing');
       }
     } catch (err: any) {
       setStatus('typing');

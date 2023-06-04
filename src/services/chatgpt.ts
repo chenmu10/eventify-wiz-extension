@@ -1,7 +1,5 @@
-const BASE_URL = 'https://api.openai.com/v1';
-
 export async function extractEventDetails(eventData: string): Promise<any> {
-  const response = await fetch(`${BASE_URL}/completions`, {
+  const response = await fetch(`${process.env.OPENAI_URL}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -19,5 +17,9 @@ export async function extractEventDetails(eventData: string): Promise<any> {
       stop: ['\n'],
     }),
   });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(JSON.stringify(data?.error?.code || data?.error?.message));
+  }
   return response.json();
 }

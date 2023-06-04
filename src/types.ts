@@ -1,15 +1,23 @@
-type EventDetails = {
-  summary: string
-  location: string
+export type EventDetails = {
+  summary: string;
+  location: string;
   start: {
-    dateTime: Date
-    timeZone: string
-  }
+    dateTime: string;
+    timeZone: string;
+  };
   end: {
-    dateTime: Date
-    timeZone: string
-  }
-  description: string
-}
+    dateTime: string;
+    timeZone: string;
+  };
+  description: string;
+};
 
-export default EventDetails
+export type FormData = {
+  summary: string;
+  location: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+};

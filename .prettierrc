@@ -3,9 +3,9 @@
   "trailingComma": "es5",
   "requirePragma": false,
   "arrowParens": "always",
-  "semi": false,
+  "semi": true,
   "tabWidth": 2,
   "printWidth": 120,
   "jsxSingleQuote": true,
-  "endOfLine":"auto" 
+  "endOfLine": "auto"
 }

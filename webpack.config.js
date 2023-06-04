@@ -1,30 +1,25 @@
-var webpack = require('webpack'),
+const webpack = require('webpack'),
   path = require('path'),
-  fileSystem = require('fs-extra'),
+  fs = require('fs-extra'),
   env = require('./utils/env'),
+  dotEnv = require('dotenv-webpack'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
-  TerserPlugin = require('terser-webpack-plugin')
-var { CleanWebpackPlugin } = require('clean-webpack-plugin')
-var ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-var ReactRefreshTypeScript = require('react-refresh-typescript')
+  TerserPlugin = require('terser-webpack-plugin'),
+  ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'),
+  ReactRefreshTypeScript = require('react-refresh-typescript'),
+  { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const ASSET_PATH = process.env.ASSET_PATH || '/'
-
-var alias = {}
+const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 // load the secrets
-var secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js')
+const secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
+const alias = fs.existsSync(secretsPath) ? { secrets: secretsPath } : {};
+const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2'];
 
-var fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2']
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
-if (fileSystem.existsSync(secretsPath)) {
-  alias['secrets'] = secretsPath
-}
-
-const isDevelopment = process.env.NODE_ENV !== 'production'
-
-var options = {
+const options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
     options: path.join(__dirname, 'src', 'pages', 'Options', 'index.jsx'),
@@ -115,7 +110,8 @@ var options = {
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new CleanWebpackPlugin({ verbose: false }),
     new webpack.ProgressPlugin(),
-    // expose and write the allowed env vars on the compiled bundle
+    new dotEnv(),
+    // expose and write the allowed env consts on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new CopyWebpackPlugin({
       patterns: [
@@ -131,7 +127,7 @@ var options = {
                 version: process.env.npm_package_version,
                 ...JSON.parse(content.toString()),
               })
-            )
+            );
           },
         },
       ],
@@ -173,10 +169,10 @@ var options = {
   infrastructureLogging: {
     level: 'info',
   },
-}
+};
 
 if (env.NODE_ENV === 'development') {
-  options.devtool = 'cheap-module-source-map'
+  options.devtool = 'cheap-module-source-map';
 } else {
   options.optimization = {
     minimize: true,
@@ -185,7 +181,7 @@ if (env.NODE_ENV === 'development') {
         extractComments: false,
       }),
     ],
-  }
+  };
 }
 
-module.exports = options
+module.exports = options;

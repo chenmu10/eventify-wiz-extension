@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import EventDetailsForm from '../../components/EventDetailsForm';
 import ExtractForm from '../../components/ExtractForm';
+import { handleCreateEventClick } from '../../services/google-calendar';
 import { EventDetails } from './../../types';
 import './Popup.css';
 
@@ -23,9 +24,13 @@ const Popup = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert(JSON.stringify(formData));
+    try {
+      await handleCreateEventClick(formData);
+    } catch (error) {
+      console.error(`error: ${error}`);
+    }
   };
 
   const handleExtractedData = (data?: EventDetails) => {

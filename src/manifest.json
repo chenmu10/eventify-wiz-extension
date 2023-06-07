@@ -3,11 +3,12 @@
   "name": "EventifyWiz - Text to Event",
   "description": "A chrome extension to create new google calendar events from any text",
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": "calendar-icon-34.png"
+    "default_title": "Events From Text",
+    "default_popup": "popup.html"
   },
   "icons": {
-    "34": "calendar-icon-34.png",
+    "16": "calendar-favicon-16.png",
+    "32": "calendar-favicon-32.png",
     "128": "calendar-icon-128.png"
   },
   "content_scripts": [
@@ -17,10 +18,10 @@
       "css": ["content.styles.css"]
     }
   ],
-  "web_accessible_resources": [
-    {
-      "resources": ["content.styles.css", "calendar-icon-128.png", "calendar-icon-34.png"],
-      "matches": []
-    }
-  ]
+  "oauth2": {
+    "client_id": "%GOOGLE_CLIENT_ID%",
+    "scopes": ["https://www.googleapis.com/auth/calendar.events"]
+  },
+  "permissions": ["identity"],
+  "key": "%GOOGLE_EXTENSION_KEY%"
 }

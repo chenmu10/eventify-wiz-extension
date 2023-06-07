@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, FormEvent } from 'react';
-import { FormData } from '../types';
+import { EventFormData } from '../types';
 interface EventDetailsFormProps {
-  formData: FormData;
+  formData: EventFormData;
   onHandleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }

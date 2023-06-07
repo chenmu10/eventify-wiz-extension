@@ -12,7 +12,7 @@ export type EventDetails = {
   description: string;
 };
 
-export type FormData = {
+export type EventFormData = {
   summary: string;
   location: string;
   description: string;

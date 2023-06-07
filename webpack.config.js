@@ -1,20 +1,24 @@
 const webpack = require('webpack'),
   path = require('path'),
-  fs = require('fs-extra'),
-  env = require('./utils/env'),
-  dotEnv = require('dotenv-webpack'),
+  utilsEnv = require('./utils/env'),
+  dotenv = require('dotenv'),
+  dotEnvWebpack = require('dotenv-webpack'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   TerserPlugin = require('terser-webpack-plugin'),
   ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'),
   ReactRefreshTypeScript = require('react-refresh-typescript'),
   { CleanWebpackPlugin } = require('clean-webpack-plugin');
+require('dotenv').config();
 
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
-// load the secrets
-const secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
-const alias = fs.existsSync(secretsPath) ? { secrets: secretsPath } : {};
+const env = dotenv.config().parsed;
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  return prev;
+}, {});
+
 const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2'];
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -103,14 +107,14 @@ const options = {
     ],
   },
   resolve: {
-    alias: alias,
     extensions: fileExtensions.map((extension) => '.' + extension).concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
   },
   plugins: [
+    new webpack.DefinePlugin(envKeys),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new CleanWebpackPlugin({ verbose: false }),
     new webpack.ProgressPlugin(),
-    new dotEnv(),
+    new dotEnvWebpack(),
     // expose and write the allowed env consts on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new CopyWebpackPlugin({
@@ -120,14 +124,12 @@ const options = {
           to: path.join(__dirname, 'build'),
           force: true,
           transform: function (content, path) {
-            // generates the manifest file using the package.json informations
-            return Buffer.from(
-              JSON.stringify({
-                description: process.env.npm_package_description,
-                version: process.env.npm_package_version,
-                ...JSON.parse(content.toString()),
-              })
-            );
+            const manifest = JSON.parse(content.toString());
+            manifest.version = process.env.npm_package_version;
+            manifest.description = process.env.npm_package_description;
+            manifest.oauth2.client_id = process.env.GOOGLE_CLIENT_ID;
+            manifest.key = String(process.env.GOOGLE_EXTENSION_KEY).replace(/[\r\n]+/g, '');
+            return Buffer.from(JSON.stringify(manifest));
           },
         },
       ],
@@ -144,17 +146,13 @@ const options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/assets/img/calendar-icon-128.png',
-          to: path.join(__dirname, 'build'),
+          from: 'src/assets/img/*[iI]con*.png',
+          to: path.join(__dirname, 'build/[name][ext]'),
           force: true,
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
-          from: 'src/assets/img/calendar-icon-34.png',
-          to: path.join(__dirname, 'build'),
+          from: 'src/assets/img/*[fF]avicon*.png',
+          to: path.join(__dirname, 'build/[name][ext]'),
           force: true,
         },
       ],
@@ -171,7 +169,7 @@ const options = {
   },
 };
 
-if (env.NODE_ENV === 'development') {
+if (utilsEnv.NODE_ENV === 'development') {
   options.devtool = 'cheap-module-source-map';
 } else {
   options.optimization = {

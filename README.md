@@ -1,6 +1,6 @@
 # EventifyWiz - Text to Calendar Chrome Extension
 
-Paste any text from a web page that includes an event details and generate a new google calender event using chatGPT.
+Paste any text from a web page that includes an event details and generate a new google calendar event using ChatGPT.
 
 ![UI](/src/assets/img/eventify-wiz-extension-UI.png)
 ![UI](/src/assets/img/eventify-wiz-extension-flow.png)

@@ -1,39 +1,52 @@
-// This file will contain the logic for interacting with the Google Studio API.
-// Future implementations will include functions for making API calls,
-// handling responses, and managing authentication.
+import { GoogleGenerativeAI } from "@google/generative-ai"; // Corrected import name
+
+// This file contains the logic for interacting with the Google Studio API (now Google AI SDK).
+
+// Ensure GEMINI_API_KEY is set in your environment
+// The non-null assertion operator (!) is used here, assuming the API key is always available.
+// If GEMINI_API_KEY might be undefined, add appropriate error handling or a check.
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function extractEventDetails(eventData: string): Promise<any> {
-  const response = await fetch(`${process.env.GOOGLE_STUDIO_URL}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.GOOGLE_STUDIO_API_KEY}`,
-    },
-    body: JSON.stringify({
-      // TODO: Replace with actual Google Studio model and parameters
-      model: 'google-studio-text-model', // Placeholder model name
-      prompt: `extract event details in google calendar api json format from this text: ${eventData}`,
-      temperature: 0, // Placeholder temperature
-      max_tokens: 100, // Placeholder max_tokens
-      top_p: 1, // Placeholder top_p
-      frequency_penalty: 0.0, // Placeholder frequency_penalty
-      presence_penalty: 0.0, // Placeholder presence_penalty
-      stop: ['\n'], // Placeholder stop sequences
-    }),
-  });
+  try {
+    // Model can be "gemini-pro", "gemini-1.0-pro", "gemini-1.5-flash-latest", etc.
+    // This might need to be configurable or updated based on specific model availability and requirements.
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-  if (!response.ok) {
-    let errorData;
-    try {
-      errorData = await response.json();
-    } catch (e) {
-      // If the response is not JSON, use the status text
-      throw new Error(response.statusText);
+    const prompt = `extract event details in google calendar api json format from this text: ${eventData}`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    
+    // Check if the response has the text function and content
+    if (response && typeof response.text === 'function') {
+      const text = response.text();
+      // Assuming the API returns a JSON string that needs to be parsed
+      return JSON.parse(text);
+    } else {
+      // Handle cases where the response or text function is not available
+      // or if the candidate parts are missing.
+      // You might want to inspect `result.response.candidates` if `text()` is not directly available.
+      const candidates = response?.candidates;
+      if (candidates && candidates.length > 0 && candidates[0].content && candidates[0].content.parts && candidates[0].content.parts.length > 0 && candidates[0].content.parts[0].text) {
+        const textFromParts = candidates[0].content.parts[0].text;
+        return JSON.parse(textFromParts);
+      }
+      throw new Error("Failed to extract text content from API response.");
     }
-    // Attempt to extract a meaningful error message
-    throw new Error(JSON.stringify(errorData?.error?.message || errorData?.error?.code || errorData));
-  }
 
-  return response.json();
+  } catch (error: any) {
+    console.error("Error extracting event details from Google AI:", error);
+    // It's good practice to throw a new error to avoid exposing too much detail
+    // or to standardize error messages.
+    let errorMessage = "An unknown error occurred.";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && error.message) {
+      errorMessage = error.message;
+    }
+    throw new Error(`Failed to extract event details. ${errorMessage}`);
+  }
 }

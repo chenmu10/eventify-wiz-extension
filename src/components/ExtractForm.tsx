@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { EventDetails } from '../types';
-import { extractEventDetails } from './../services/chatgpt';
+import { extractEventDetails } from './../services/google-studio';
 interface ExtractFormProps {
   onExtractedData: (eventDetails: EventDetails) => void;
 }
